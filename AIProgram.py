@@ -4,11 +4,7 @@ import random
 
 import os
 
-from pygame.locals import *
-
 import sys
-
-import time
 
 import pyganim
 
@@ -20,7 +16,6 @@ size = width, height = 960, 600
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
-
 running = True
 
 rect_width = 0
@@ -28,9 +23,11 @@ rect_x = 50
 rect_y = 50
 square_width = 130
 square_height = 66
-rect_color = (70, 70, 70)
+rect_color = (100, 100, 100)
 rect_rect = ((rect_x, rect_y), (square_width, square_height))
 x1 = x2 = y1 = y2 = 0
+
+FPS = 30
 
 
 def load_image(name, colorkey=None):
@@ -48,8 +45,6 @@ def load_image(name, colorkey=None):
         raise SystemExit(message)
 
     image = image.convert_alpha()
-
-
 
     if colorkey is not None:
 
@@ -98,7 +93,7 @@ a = random.randint(0, 4)
 BackGround = Background(spis[a], (0, 0))
 
 primer = ['12 + 12', '12 + 84', '16 + 58',
-          '30 - 7',	'86 - 24', '34 + 16',
+          '30 - 7', '86 - 24', '34 + 16',
           '39 + 43', '10 + 5', '12 + 66',
           '98 - 72', '42 + 46', '98 - 80',
           '95 - 30', '15 + 58', '47 - 18',
@@ -109,30 +104,26 @@ primer = ['12 + 12', '12 + 84', '16 + 58',
           '18 : 9', '3 * 12', '5 * 7',
           '7 * 8', '56 : 7', '44 : 4',
           '8 : 2', '28 : 4', '39 : 3', '15 + 7', '68 - 7',
-          '81 - 13', '32 - 13',	'87 - 25', '22 + 78',
-          '51 - 8',  '78 - 65', '13 + 23', '6 + 85',
-          '57 - 1',	'50 + 36', '83 - 69']
+          '81 - 13', '32 - 13', '87 - 25', '22 + 78',
+          '51 - 8', '78 - 65', '13 + 23', '6 + 85',
+          '57 - 1', '50 + 36', '83 - 69']
 
 solutions = [24, 96, 74, 23, 62, 50,
              82, 15, 78, 26, 88, 18, 65, 73,
              29, 70, 75, 72, 30, 3, 9, 12,
              5, 64, 48, 49, 6, 2, 36, 35,
-             56, 8, 11, 4, 7, 13, 22, 61, 69, 19, 62, 100, 43, 18, 36, 91, 56, 86, 14]
+             56, 8, 11, 4, 7, 13, 22, 61, 69, 19, 62,
+             100, 43, 18, 36, 91, 56, 86, 14]
 
 all_sprites = pygame.sprite.Group()
 
-robot_image = load_image("robot.png")
+score = 0
 
-robot = pygame.sprite.Sprite(all_sprites)
-
-robot.image = robot_image
-
-robot.rect = robot.image.get_rect()
-
-
-def draw(b, c, d):
+def draw(b, c, d, score):
 
     global primer
+
+    w = (255, 255, 255)
 
     font = pygame.font.Font(None, 50)
     text = font.render(primer[b], 1, (100, 255, 100))
@@ -141,36 +132,39 @@ def draw(b, c, d):
     text_w = text.get_width()
     text_h = text.get_height()
     screen.blit(text, (text_x, text_y))
-    pygame.draw.rect(screen, (255, 255, 255), (text_x - 10, text_y - 10,
-                                           text_w + 20, text_h + 20), 3)
-
+    pygame.draw.rect(screen, w, (text_x - 10, text_y - 10, text_w + 20, text_h + 20), 3)
 
     text1 = font.render(primer[c], 1, (100, 255, 100))
     text_x1 = width // 2 - 70
     text_w1 = text1.get_width()
     text_h1 = text1.get_height()
     screen.blit(text1, (text_x1, text_y))
-    pygame.draw.rect(screen, (255, 255, 255), (text_x1 - 10, text_y - 10,
-                                           text_w1 + 20, text_h1 + 20), 3)
-
+    pygame.draw.rect(screen, w, (text_x1 - 10, text_y - 10, text_w1 + 20, text_h1 + 20), 3)
 
     text2 = font.render(primer[d], 1, (100, 255, 100))
     text_x2 = width // 2 + width // 4 - 70
     text_w2 = text2.get_width()
     text_h2 = text2.get_height()
     screen.blit(text2, (text_x2, text_y))
-    pygame.draw.rect(screen, (255, 255, 255), (text_x2 - 10, text_y - 10,
-                                           text_w2 + 20, text_h2 + 20), 3)
+    pygame.draw.rect(screen, w, (text_x2 - 10, text_y - 10, text_w2 + 20, text_h2 + 20), 3)
+
+    text3 = font.render('Твой рейтинг:' + str(score), 2, (255, 69, 0))
+    text_x3 = 670
+    text_y3 = 30
+    text_w3 = text3.get_width()
+    text_h3 = text3.get_height()
+    screen.blit(text3, (text_x3, text_y3))
+    pygame.draw.rect(screen, w, (text_x3 - 10, text_y3 - 10, text_w3 + 20, text_h3 + 20), 3)
 
     left1 = text_x
-    right1 = text_x + 0.15 * text_x
+    right1 = text_x + 0.25 * text_x
     left2 = text_x1
-    right2 = text_x1 + 0.15 * text_x1
+    right2 = text_x1 + 0.25 * text_x1
     left3 = text_x2
-    right3 = text_x2 + 0.15 * text_x2
+    right3 = text_x2 + 0.25 * text_x2
 
-    top = text_y - 0.2 * text_y
-    bottom = text_y + 0.2 * text_y
+    top = text_y - 0.15 * text_y
+    bottom = text_y + 0.15 * text_y
 
     return left1, right1, left2, right2, left3, right3, top, bottom
 
@@ -185,7 +179,7 @@ c = random.randint(0, len(primer) - 1)
 
 d = random.randint(0, len(primer) - 1)
 
-draw(b, c, d)
+draw(b, c, d, score)
 
 otvet = False
 
@@ -208,22 +202,11 @@ y1 = 0
 
 f = False
 
-robot = AnimatedSprite(load_image('robot.png'), 13, 2, 131, 150)
-
-boltAnim = pyganim.PygAnimation([('testimages/bolt_strike_0001.png', 0.1),
-                                 ('testimages/bolt_strike_0002.png', 0.1),
-                                 ('testimages/bolt_strike_0003.png', 0.1),
-                                 ('testimages/bolt_strike_0004.png', 0.1),
-                                 ('testimages/bolt_strike_0005.png', 0.1),
-                                 ('testimages/bolt_strike_0006.png', 0.1),
-                                 ('testimages/bolt_strike_0007.png', 0.1),
-                                 ('testimages/bolt_strike_0008.png', 0.1),
-                                 ('testimages/bolt_strike_0009.png', 0.1),
-                                 ('testimages/bolt_strike_0010.png', 0.1)])
-boltAnim.play() # there is also a pause() and stop() method
+robot = AnimatedSprite(load_image('robot.png'), 13, 2, 50, 0)
 
 mainClock = pygame.time.Clock()
 
+dist = 5
 
 while running:
 
@@ -231,14 +214,7 @@ while running:
 
     screen.blit(BackGround.image, BackGround.rect)
 
-
-    pygame.draw.rect(screen, rect_color, rect_rect, rect_width)
-
-
-    left1, right1, left2, right2, left3, right3, top, bottom = draw(b, c, d)
-
-
-
+    left1, right1, left2, right2, left3, right3, top, bottom = draw(b, c, d, score)
 
     if left1 <= rect_x <= right1 and top <= rect_y <= bottom:
         if x == solutions[int(b)]:
@@ -252,7 +228,6 @@ while running:
 
     if otvet:
         o += 1
-
 
     if o == 10:
 
@@ -271,45 +246,60 @@ while running:
         o = 0
 
         rect_y = 200
+
         rect_x = 400
 
         f = False
 
-
+        score += 1
 
     for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
                 sys.exit()
 
+            key = pygame.key.get_pressed()
+    if event.type == pygame.KEYDOWN:
+        if key[pygame.K_DOWN]:
+            robot.rect.top += dist
+        elif key[pygame.K_UP]:
+            robot.rect.top -= dist
+        if key[pygame.K_RIGHT]:
+            robot.rect.left += dist
+        elif key[pygame.K_LEFT]:
+            robot.rect.left -= dist
+        if event.key == pygame.K_SPACE:
+            f = True
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x1, y1 = event.pos
-                f = True
 
-    if x1 > rect_x and f:
-        rect_x += 1
-    elif x1 < rect_x and f:
-        rect_x -= 1
+    if f:
+        rect_x = robot.rect.left - 20
     
-    if y1 > rect_y and f:
-        rect_y += 1
-    elif y1 < rect_y and f:
-        rect_y -= 1
+    if f:
+        rect_y = robot.rect.top + 80
+
+    all_sprites.draw(screen)
+
+    all_sprites.update()
+
+    pygame.draw.rect(screen, rect_color, rect_rect, rect_width)
 
     text = font.render(str(x), 1, (100, 255, 100))
+
     textx = rect_x
+
     texty = rect_y - 20
+
     screen.blit(text, (textx, texty))
 
     rect_rect = ((rect_x - 50, rect_y - 50), (square_width, square_height))
 
     pygame.draw.rect(screen, (169, 169, 169), (0, 0, 960, 600), 10)
 
-    boltAnim.blit(screen, (rect_x - 50, rect_y - 70))
-
     pygame.display.flip()
 
-    clock.tick(50)
+    clock.tick(FPS)
 
 pygame.quit()
