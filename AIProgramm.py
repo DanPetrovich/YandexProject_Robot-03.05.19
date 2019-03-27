@@ -8,10 +8,12 @@ import sys
 
 pygame.init()
 
-pygame.display.set_caption("Math Lesson")
+pygame.display.set_caption("Math Lesson ;) ")
 
 size = width, height = 960, 600
+
 screen = pygame.display.set_mode(size)
+
 clock = pygame.time.Clock()
 
 running = True
@@ -23,6 +25,7 @@ square_width = 130
 square_height = 66
 rect_color = (100, 100, 100)
 rect_rect = ((rect_x, rect_y), (square_width, square_height))
+
 x1 = x2 = y1 = y2 = 0
 
 FPS = 30
@@ -87,7 +90,9 @@ class AnimatedSprite(pygame.sprite.Sprite):
 
 
 spis = ['m.png', 'm1.png', 'm2.png', 'm3.png', 'm5.png']
+
 a = random.randint(0, 4)
+
 BackGround = Background(spis[a], (0, 0))
 
 primer = ['12 + 12', '12 + 84', '16 + 58',
@@ -117,50 +122,80 @@ all_sprites = pygame.sprite.Group()
 
 score = 0
 
-
 def draw(b, c, d, score):
+
     global primer
+
     w = (255, 255, 255)
 
     font = pygame.font.Font(None, 50)
+
     text = font.render(primer[b], 1, (100, 255, 100))
+
     text_x = width // 4 - 70
+
     text_y = height // 2 - text.get_height() // 2
+
     text_w = text.get_width()
+
     text_h = text.get_height()
+
     screen.blit(text, (text_x, text_y))
+
     pygame.draw.rect(screen, w, (text_x - 10, text_y - 10, text_w + 20, text_h + 20), 3)
 
     text1 = font.render(primer[c], 1, (100, 255, 100))
+
     text_x1 = width // 2 - 70
+
     text_w1 = text1.get_width()
+
     text_h1 = text1.get_height()
+
     screen.blit(text1, (text_x1, text_y))
+
     pygame.draw.rect(screen, w, (text_x1 - 10, text_y - 10, text_w1 + 20, text_h1 + 20), 3)
 
     text2 = font.render(primer[d], 1, (100, 255, 100))
+
     text_x2 = width // 2 + width // 4 - 70
+
     text_w2 = text2.get_width()
+
     text_h2 = text2.get_height()
+
     screen.blit(text2, (text_x2, text_y))
+
     pygame.draw.rect(screen, w, (text_x2 - 10, text_y - 10, text_w2 + 20, text_h2 + 20), 3)
 
-    text3 = font.render('“‚ÓÈ ÂÈÚËÌ„:' + str(score), 2, (255, 69, 0))
+    text3 = font.render('–¢–≤–æ–π —Ä–µ–π—Ç–∏–Ω–≥:' + str(score), 2, (255, 69, 0))
+
     text_x3 = 670
+
     text_y3 = 30
+
     text_w3 = text3.get_width()
+
     text_h3 = text3.get_height()
+
     screen.blit(text3, (text_x3, text_y3))
+
     pygame.draw.rect(screen, w, (text_x3 - 10, text_y3 - 10, text_w3 + 20, text_h3 + 20), 3)
 
     left1 = text_x
+
     right1 = text_x + 0.25 * text_x
+
     left2 = text_x1
+
     right2 = text_x1 + 0.25 * text_x1
+
     left3 = text_x2
+
     right3 = text_x2 + 0.25 * text_x2
 
     top = text_y - 0.15 * text_y
+
     bottom = text_y + 0.15 * text_y
 
     return left1, right1, left2, right2, left3, right3, top, bottom
@@ -187,6 +222,7 @@ x = solutions[int(s[random.randint(0, 2)])]
 o = 0
 
 font = pygame.font.Font(None, 50)
+
 text = font.render(str(x), 1, (100, 255, 100))
 # textx = rect_x + 45
 # texty = rect_y + 20
@@ -214,13 +250,21 @@ while running:
     left1, right1, left2, right2, left3, right3, top, bottom = draw(b, c, d, score)
 
     if left1 <= rect_x <= right1 and top <= rect_y <= bottom:
+
         if x == solutions[int(b)]:
+
             otvet = True
+
     elif left2 <= rect_x <= right2 and top <= rect_y <= bottom:
+
         if x == solutions[int(c)]:
+
             otvet = True
+
     elif left3 <= rect_x <= right3 and top <= rect_y <= bottom:
+
         if x == solutions[int(d)]:
+
             otvet = True
 
     if otvet:
@@ -250,32 +294,57 @@ while running:
 
         score += 1
 
+        FPS = 30
+
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+
+            if event.type == pygame.QUIT:
+
+                running = False
+
+                sys.exit()
+
+            key = pygame.key.get_pressed()
+
+    if event.type == pygame.KEYDOWN:
+
+        if key[pygame.K_ESCAPE]:
+
             running = False
+
             sys.exit()
 
-        key = pygame.key.get_pressed()
-        if event.type == pygame.KEYDOWN:
-            if key[pygame.K_DOWN]:
-                robot.rect.top += dist
-            elif key[pygame.K_UP]:
-                robot.rect.top -= dist
-            if key[pygame.K_RIGHT]:
-                robot.rect.left += dist
-            elif key[pygame.K_LEFT]:
-                robot.rect.left -= dist
-            if event.key == pygame.K_SPACE:
-                f = True
+        if key[pygame.K_DOWN]:
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            x1, y1 = event.pos
+            robot.rect.top += dist
+
+        elif key[pygame.K_UP]:
+
+            robot.rect.top -= dist
+
+        if key[pygame.K_RIGHT]:
+
+            robot.rect.left += dist
+
+        elif key[pygame.K_LEFT]:
+
+            robot.rect.left -= dist
+
+        if event.key == pygame.K_SPACE:
+
+            f = True
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+
+                x1, y1 = event.pos
 
     if f:
         rect_x = robot.rect.left - 20
+        FPS = 20
     
     if f:
         rect_y = robot.rect.top + 80
+        FPS = 20
 
     all_sprites.draw(screen)
 
@@ -284,12 +353,11 @@ while running:
     pygame.draw.rect(screen, rect_color, rect_rect, rect_width)
 
     text = font.render(str(x), 1, (100, 255, 100))
-
-    textx = rect_x
-
-    texty = rect_y - 20
-
+    textx = rect_x - 5
+    texty = rect_y - 30
     screen.blit(text, (textx, texty))
+
+    pygame.draw.rect(screen, (95, 158, 160), (rect_x - 50, rect_y - 50, square_width, square_height), 5)
 
     rect_rect = ((rect_x - 50, rect_y - 50), (square_width, square_height))
 
