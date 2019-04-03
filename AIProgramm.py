@@ -122,6 +122,7 @@ all_sprites = pygame.sprite.Group()
 
 score = 0
 
+
 def draw(b, c, d, score):
 
     global primer
@@ -298,13 +299,13 @@ while running:
 
     for event in pygame.event.get():
 
-            if event.type == pygame.QUIT:
+        if event.type == pygame.QUIT:
 
-                running = False
+            running = False
 
-                sys.exit()
+            sys.exit()
 
-            key = pygame.key.get_pressed()
+        key = pygame.key.get_pressed()
 
     if event.type == pygame.KEYDOWN:
 
@@ -337,10 +338,6 @@ while running:
             if event.type == pygame.MOUSEBUTTONDOWN:
 
                 x1, y1 = event.pos
-
-    if f:
-        rect_x = robot.rect.left - 20
-        FPS = 20
     
     if f:
         rect_y = robot.rect.top + 80
@@ -357,7 +354,9 @@ while running:
     texty = rect_y - 30
     screen.blit(text, (textx, texty))
 
-    pygame.draw.rect(screen, (95, 158, 160), (rect_x - 50, rect_y - 50, square_width, square_height), 5)
+    z = (95, 158, 160)
+
+    pygame.draw.rect(screen, z, (rect_x - 50, rect_y - 50, square_width, square_height), 5)
 
     rect_rect = ((rect_x - 50, rect_y - 50), (square_width, square_height))
 
