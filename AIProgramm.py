@@ -32,7 +32,6 @@ FPS = 30
 
 
 def load_image(name, colorkey=None):
-
     fullname = os.path.join(name)
 
     try:
@@ -50,7 +49,6 @@ def load_image(name, colorkey=None):
     if colorkey is not None:
 
         if colorkey is -1:
-
             colorkey = image.get_at((0, 0))
 
         image.set_colorkey(colorkey)
@@ -124,7 +122,6 @@ score = 0
 
 
 def draw(b, c, d, score):
-
     global primer
 
     w = (255, 255, 255)
@@ -253,26 +250,24 @@ while running:
     if left1 <= rect_x <= right1 and top <= rect_y <= bottom:
 
         if x == solutions[int(b)]:
-
             otvet = True
 
     elif left2 <= rect_x <= right2 and top <= rect_y <= bottom:
 
         if x == solutions[int(c)]:
-
             otvet = True
+            f = False
 
     elif left3 <= rect_x <= right3 and top <= rect_y <= bottom:
 
         if x == solutions[int(d)]:
-
             otvet = True
+            f = False
 
     if otvet:
         o += 1
 
     if o == 10:
-
         b = random.randint(0, len(primer) - 1)
 
         c = random.randint(0, len(primer) - 1)
@@ -300,7 +295,6 @@ while running:
     for event in pygame.event.get():
 
         if event.type == pygame.QUIT:
-
             running = False
 
             sys.exit()
@@ -310,7 +304,6 @@ while running:
     if event.type == pygame.KEYDOWN:
 
         if key[pygame.K_ESCAPE]:
-
             running = False
 
             sys.exit()
@@ -331,16 +324,12 @@ while running:
 
             robot.rect.left -= dist
 
-        if event.key == pygame.K_SPACE:
+    if rect_y - 50 < robot.rect.top - 50 < rect_y + 50 and rect_x - 100 < robot.rect.right < rect_x + 100:
+        f = True
 
-            f = True
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-
-                x1, y1 = event.pos
-    
     if f:
-        rect_y = robot.rect.top + 80
+        rect_y = robot.rect.top
+        rect_x = robot.rect.right
         FPS = 20
 
     all_sprites.draw(screen)
@@ -350,9 +339,9 @@ while running:
     pygame.draw.rect(screen, rect_color, rect_rect, rect_width)
 
     text = font.render(str(x), 1, (100, 255, 100))
-    textx = rect_x - 5
-    texty = rect_y - 30
-    screen.blit(text, (textx, texty))
+    text_x = rect_x - 5
+    text_y = rect_y - 30
+    screen.blit(text, (text_x, text_y))
 
     z = (95, 158, 160)
 
